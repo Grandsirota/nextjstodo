@@ -1,0 +1,170 @@
+/* Body */
+body {
+    font-family: 'Lora', serif;
+    background: url('images/122373784_p0_master1200.jpg') no-repeat center center fixed; /* เพิ่มรูปภาพเป็นพื้นหลัง */
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #003366; /* น้ำเงินเข้ม */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Page container */
+.page {
+    max-width: 800px;
+    width: 100%;
+    margin: 50px auto;
+    padding: 30px;
+    background: rgba(179, 218, 255, 0.9); /* ฟ้ากลางที่เข้มขึ้น และเพิ่มความโปร่งใส */
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 51, 102, 0.4); /* เงาน้ำเงินเข้ม */
+    transition: transform 0.2s ease;
+}
+
+.page:hover {
+    transform: scale(1.01);
+}
+
+/* Headings */
+h1, h2 {
+    color: #66a3ff; /* สีฟ้าสดใส */
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+/* Input fields */
+.input-field {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #99c2ff; /* ขอบสีฟ้าอ่อน */
+    border-radius: 8px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 51, 0.1); /* เงาด้านในน้ำเงินเข้ม */
+    font-size: 16px;
+    background-color: #e6f4ff; /* สีฟ้าอ่อน */
+    color: #003366; /* น้ำเงินเข้ม */
+    transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #66a3ff; /* สีฟ้าสดใส */
+    outline: none;
+}
+
+/* Buttons container */
+.buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* General button styles */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Create button */
+.create-btn {
+    background-color: #66a3ff; /* สีฟ้าสดใส */
+}
+
+.create-btn:hover {
+    background-color: #3399ff; /* สีฟ้าเข้มขึ้น */
+    box-shadow: 0 4px 12px rgba(51, 153, 255, 0.4); /* เงาสีฟ้าเข้ม */
+}
+
+/* Status buttons */
+.status-btn {
+    background-color: #99ccff; /* สีฟ้าสดใสอ่อน */
+}
+
+.completed-btn {
+    background-color: #4682b4; /* สีฟ้าน้ำเงินเข้ม */
+}
+
+.completed-btn:hover {
+    background-color: #4169e1; /* สีฟ้าเข้ม */
+}
+
+.incomplete-btn {
+    background-color: #99ccff; /* สีฟ้าสดใสอ่อน */
+}
+
+.incomplete-btn:hover {
+    background-color: #66a3ff; /* สีฟ้าสดใส */
+}
+
+/* Delete button */
+.delete-btn {
+    background-color: #ff9999; /* สีแดงอ่อน */
+}
+
+.delete-btn:hover {
+    background-color: #ff6666; /* สีแดงเข้ม */
+    box-shadow: 0 4px 12px rgba(255, 102, 102, 0.3); /* เงาสีแดง */
+}
+
+/* Todo List */
+.todo-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+/* Todo items */
+.todo-item {
+    background-color: #cce7ff; /* สีฟ้าอ่อน */
+    border: 1px solid #99c2ff; /* สีฟ้าอ่อน */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 51, 0.1); /* เงาน้ำเงินเข้ม */
+    transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.todo-item:hover {
+    background-color: #99c2ff; /* สีฟ้าเข้มขึ้น */
+    box-shadow: 0 4px 15px rgba(0, 0, 51, 0.2);
+}
+
+/* Completed tasks */
+.completed {
+    text-decoration: line-through;
+    color: #b0c4de; /* สีฟ้าอ่อน */
+}
+
+/* Todo item text */
+.todo-item h3 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+    color: #003366; /* น้ำเงินเข้ม */
+}
+
+.todo-item p {
+    font-size: 16px;
+    margin: 0;
+    color: #6699cc; /* สีฟ้าอ่อน */
+}

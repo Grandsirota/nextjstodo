@@ -1,95 +1,158 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import React, { useState, useEffect } from "react";
+import "../app/style.css"; 
+
+interface Todo {
+  _id: string;
+  name: string;
+  description: string;
+  status: boolean;
+  duedate: string;
+}
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [duedate, setDuedate] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  // ดึงข้อมูล Todo ทั้งหมดเมื่อโหลดหน้า
+  useEffect(() => {
+    fetch("http://localhost:3000/api/v1/todo", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  // สร้างงานใหม่
+  const handleCreateTodo = () => {
+    if (!name || !description || !duedate) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    fetch("http://localhost:3000/api/v1/todo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, description, duedate }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos([...todos, data.data]);
+        setName("");
+        setDescription("");
+        setDuedate("");
+      });
+  };
+
+  // อัพเดทสถานะการทำงาน
+  const handleToggleStatus = (id: string, currentStatus: boolean) => {
+    fetch("http://localhost:3000/api/v1/todo", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, status: !currentStatus }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const updatedTodos = todos.map((todo) =>
+          todo._id === id ? { ...todo, status: !currentStatus } : todo
+        );
+        setTodos(updatedTodos);
+      });
+  };
+
+  // ลบงานพร้อมแสดงแจ้งเตือน
+  const handleDelete = (id: string) => {
+    const confirmed = window.confirm("Are you sure you want to delete this task?");
+    if (confirmed) {
+      fetch("http://localhost:3000/api/v1/todo", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      }).then(() => {
+        setTodos(todos.filter((todo) => todo._id !== id));
+      });
+    }
+  };
+
+  return (
+    <div className="page">
+      <h1>TODO List</h1>
+  
+      <div>
+        <h2>Create New Task</h2>
+        <input
+          type="text"
+          placeholder="Task Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="input-field"
+        />
+        <input
+          type="text"
+          placeholder="Task Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="input-field"
+        />
+        <input
+          type="date"
+          id="duedate"
+          value={duedate}
+          onChange={(e) => {
+            const selectedDate = e.target.value;
+            if (!isNaN(Date.parse(selectedDate))) {
+              setDuedate(selectedDate);
+            }
+          }}
+          className="input-field"
+        />
+        <button onClick={handleCreateTodo} className="btn create-btn">
+          Add Task
+        </button>
+      </div>
+  
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className="todo-list">
+          {todos.map((todo) => (
+            <li key={todo._id} className={`todo-item ${todo.status ? "completed" : ""}`}>
+              <h3>{todo.name}</h3>
+              <p>{todo.description}</p>
+              <p>Due date: {todo.duedate}</p>
+              <p>Status: {todo.status ? "Completed" : "Not Completed"}</p>
+              <button
+                onClick={() => handleToggleStatus(todo._id, todo.status)}
+                className={`btn status-btn ${todo.status ? "completed-btn" : "incomplete-btn"}`}
+              >
+                {todo.status ? "Mark as Incomplete" : "Mark as Complete"}
+              </button>
+              <button onClick={() => handleDelete(todo._id)} className="btn delete-btn">
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
